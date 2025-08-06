@@ -1,0 +1,86 @@
+services:
+  # API Gateway
+  - type: web
+    name: polipet-api-gateway
+    env: node
+    buildCommand: cd api-gateway && npm install && npm run build
+    startCommand: cd api-gateway && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8000
+
+  # Users Service
+  - type: web
+    name: polipet-users-service
+    env: node
+    buildCommand: cd users-service && npm install && npm run build
+    startCommand: cd users-service && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8001
+      - key: DATABASE_URL
+        fromDatabase:
+          name: polipet-users-db
+          property: connectionString
+
+  # Pets Service
+  - type: web
+    name: polipet-pets-service
+    env: node
+    buildCommand: cd pets-service && npm install && npm run build
+    startCommand: cd pets-service && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8002
+      - key: DATABASE_URL
+        fromDatabase:
+          name: polipet-pets-db
+          property: connectionString
+
+  # Adoptions Service
+  - type: web
+    name: polipet-adoptions-service
+    env: node
+    buildCommand: cd adoptions-service && npm install && npm run build
+    startCommand: cd adoptions-service && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8003
+      - key: DATABASE_URL
+        fromDatabase:
+          name: polipet-adoptions-db
+          property: connectionString
+
+  # Frontend
+  - type: web
+    name: polipet-frontend
+    env: static
+    buildCommand: cd pet-adoption-frontend && npm install && npm run build
+    staticPublishPath: ./pet-adoption-frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://polipet-api-gateway.onrender.com
+
+databases:
+  # Users Database
+  - name: polipet-users-db
+    databaseName: users_db
+    user: polipet_user
+
+  # Pets Database
+  - name: polipet-pets-db
+    databaseName: pets_db
+    user: polipet_user
+
+  # Adoptions Database
+  - name: polipet-adoptions-db
+    databaseName: adoptions_db
+    user: polipet_user 
