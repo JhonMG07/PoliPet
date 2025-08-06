@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd ${{ matrix.service }}
-          npm ci
+          npm install
 
       - name: Run ESLint
         run: |
