@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # Base de Datos para el Microservicio de Usuarios
+  users-db:
+    image: postgres:15
+    container_name: users-db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users_db
+    ports:
+      - "5431:5432" # Expone la DB de usuarios en el puerto 5431 de tu máquina
+    volumes:
+      - users-data:/var/lib/postgresql/data
+
+  # Base de Datos para el Microservicio de Mascotas
+  pets-db:
+    image: postgres:15
+    container_name: pets-db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pets_db
+    ports:
+      - "5432:5432" # Expone la DB de mascotas en el puerto 5432 de tu máquina
+    volumes:
+      - pets-data:/var/lib/postgresql/data
+
+  # Base de Datos para el Microservicio de Adopciones
+  adoptions-db:
+    image: postgres:15
+    container_name: adoptions-db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: adoptions_db
+    ports:
+      - "5433:5432" # Expone la DB de adopciones en el puerto 5433 de tu máquina
+    volumes:
+      - adoptions-data:/var/lib/postgresql/data
+
+volumes:
+  users-data:
+  pets-data:
+  adoptions-data:

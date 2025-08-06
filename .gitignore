@@ -1,0 +1,41 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Dependencias de Node
+node_modules/
+package-lock.json
+
+# Archivos de build y compilación
+dist/
+.tmp/
+build/
+*.tsbuildinfo
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de entorno - ¡MUY IMPORTANTE!
+# NUNCA subas tus variables de entorno a GitHub.
+.env
+.env.*
+!.env.example
+
+# Archivos de IDEs y editores
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos de Test y Cobertura
+coverage/
+.nyc_output/
