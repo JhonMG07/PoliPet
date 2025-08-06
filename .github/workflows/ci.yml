@@ -1,0 +1,71 @@
+name: CI - PoliPet
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+  push:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  validate-pr-title:
+    name: Validate PR Title
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Check PR title format
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          if [[ ! "$PR_TITLE" =~ ^POLI-[0-9]+:\ .* ]]; then
+            echo "❌ Invalid PR title format: $PR_TITLE"
+            echo "✅ Expected format: POLI-0X: Description"
+            echo "📝 Example: POLI-01: Add user authentication"
+            exit 1
+          fi
+          echo "✅ PR title format is valid: $PR_TITLE"
+
+  lint-and-test:
+    name: Lint and Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [api-gateway]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd ${{ matrix.service }}
+          npm install
+
+      - name: Run ESLint
+        run: |
+          cd ${{ matrix.service }}
+          npm run lint
+
+      - name: Check TypeScript
+        run: |
+          cd ${{ matrix.service }}
+          npx tsc --noEmit
+
+      - name: Run tests (backend only)
+        if: matrix.service != 'pet-adoption-frontend'
+        run: |
+          cd ${{ matrix.service }}
+          npm test
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/test_db
+
+      - name: Build frontend
+        if: matrix.service == 'pet-adoption-frontend'
+        run: |
+          cd ${{ matrix.service }}
+          npm run build 

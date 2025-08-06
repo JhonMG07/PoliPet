@@ -11,4 +11,4 @@ async function bootstrap() {
 
   await app.listen(8000); // Puerto del Gateway
 }
-bootstrap();
+void bootstrap();

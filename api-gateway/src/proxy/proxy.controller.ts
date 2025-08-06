@@ -26,7 +26,7 @@ export class ProxyController {
 
   @All('/api/*')
   async proxy(@Req() req: Request, @Res() res: Response) {
-    const { method, path, body } = req;
+    const { method, path, body } = req as { method: string; path: string; body: unknown };
     this.logger.log(`Petición entrante: ${method} ${path}`);
 
     const targetServiceUrl = this.getServiceUrl(path);
@@ -57,14 +57,15 @@ export class ProxyController {
       // Reenviamos el status code, las cabeceras y el body de la respuesta
       return res.status(axiosResponse.status).set(axiosResponse.headers).send(axiosResponse.data);
 
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof AxiosError) {
         this.logger.error(`Error al contactar el servicio [${method} ${newUrl}]: ${error.message}`);
         const status = error.response?.status || 502;
         const data = error.response?.data || { message: 'Error en el servicio de destino.' };
         return res.status(status).json(data);
       }
-      this.logger.error(`Error inesperado en el gateway: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Error inesperado en el gateway: ${errorMessage}`);
       return res.status(500).json({ message: 'Error interno en el API Gateway' });
     }
   }
