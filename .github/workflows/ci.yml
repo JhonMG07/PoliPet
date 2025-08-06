@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [users-service, pets-service, adoptions-service, api-gateway, pet-adoption-frontend]
+        service: [api-gateway]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
