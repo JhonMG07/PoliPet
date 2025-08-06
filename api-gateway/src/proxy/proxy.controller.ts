@@ -13,13 +13,13 @@ export class ProxyController {
   // --- LÓGICA DE ENRUTAMIENTO MEJORADA ---
   private getServiceUrl(path: string): string | null {
     if (path.startsWith('/api/users') || path.startsWith('/api/auth')) {
-      return 'https://polipet-users-service.onrender.com';
+      return 'http://localhost:8001';
     }
     if (path.startsWith('/api/pets')) {
-      return 'https://polipet-pets-service.onrender.com';
+      return 'http://localhost:8002';
     }
     if (path.startsWith('/api/adoptions')) {
-      return 'https://polipet-adoptions-service.onrender.com';
+      return 'http://localhost:8003';
     }
     return null;
   }
